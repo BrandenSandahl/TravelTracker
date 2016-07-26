@@ -18,9 +18,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -28,8 +30,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final int LOCATION_REQUEST_CODE = 200;
 
-    GoogleMap mMap;
+    private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private HashMap<String, Memory> mMemories = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
         mMap.setOnMapClickListener(this);
-        mMap.setInfoWindowAdapter(new MarkerAdapter(getLayoutInflater()));
+        mMap.setInfoWindowAdapter(new MarkerAdapter(getLayoutInflater(), mMemories));
     }
 
     @Override
@@ -97,10 +100,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Address bestMatch = (matches.isEmpty()) ? null : matches.get(0);
         int maxLines = bestMatch.getMaxAddressLineIndex();
 
-        mMap.addMarker(new MarkerOptions()
-                .position(latLng)
-                .title(bestMatch.getAddressLine(maxLines - 1))
-                .snippet(bestMatch.getAddressLine(maxLines)));
+        Memory memory = new Memory();
+        memory.city = bestMatch.getAddressLine(maxLines - 1);
+        memory.country = bestMatch.getAddressLine(maxLines);
+        memory.latitude = latLng.latitude;
+        memory.longitute = latLng.longitude;
+        memory.notes = "My Notes...";
+
+
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(latLng));
+
+        mMemories.put(marker.getId(), memory);
 
     }
 
