@@ -1,5 +1,6 @@
 package com.sixtel.traveltracker;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ public class MemoryDialogFragment extends DialogFragment {
     private static final String MEMORY_KEY = "memory";
 
     private Memory mMemory;
+    private Listener mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,19 +28,20 @@ public class MemoryDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Memory")
-                .setMessage(mMemory.city + " " + mMemory.country)
+                .setMessage(mMemory.city + ", " + mMemory.country)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        mListener.OnSaveClicked(mMemory);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        mListener.OnCancelClicked(mMemory);
                     }
                 });
 
@@ -57,5 +60,24 @@ public class MemoryDialogFragment extends DialogFragment {
         return fragment;
     }
 
+
+
+    //this method just makes sure that the activity does have a Listener interface
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mListener = (Listener)getActivity();
+        } catch (ClassCastException e) {
+            throw new IllegalStateException("Activity does not implement the contract");
+        }
+
+    }
+
+    public interface Listener {
+        public void OnSaveClicked(Memory memory);
+        public void OnCancelClicked(Memory memory);
+    }
 
 }

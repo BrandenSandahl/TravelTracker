@@ -27,7 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMapClickListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMapClickListener, MemoryDialogFragment.Listener {
 
     private static final int LOCATION_REQUEST_CODE = 200;
     private static final String MEMORY_DIALOG_TAG = "MemoryDialog";
@@ -111,10 +112,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         MemoryDialogFragment.newInstance(memory).show(getFragmentManager(), MEMORY_DIALOG_TAG);
 
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(latLng));
-
-        mMemories.put(marker.getId(), memory);
 
     }
 
@@ -138,8 +135,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+
+    /* Methods from our interface in MemoryDialogFragment */
+    @Override
+    public void OnSaveClicked(Memory memory) {
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(memory.latitude, memory.longitute)));
+
+        mMemories.put(marker.getId(), memory);
+
+    }
+
+    @Override
+    public void OnCancelClicked(Memory memory) {
 
     }
 }
