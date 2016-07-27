@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMapClickListener {
 
     private static final int LOCATION_REQUEST_CODE = 200;
+    private static final String MEMORY_DIALOG_TAG = "MemoryDialog";
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -108,25 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         memory.longitute = latLng.longitude;
         memory.notes = "My Notes...";
 
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("memory")
-                .setMessage("You want to create a new memory?")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        new MemoryDialogFragment().show(getFragmentManager(), MEMORY_DIALOG_TAG);
 
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(latLng));
