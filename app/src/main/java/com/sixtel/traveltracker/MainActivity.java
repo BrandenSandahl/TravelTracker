@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         memory.longitute = latLng.longitude;
         memory.notes = "My Notes...";
 
-        new MemoryDialogFragment().show(getFragmentManager(), MEMORY_DIALOG_TAG);
+        MemoryDialogFragment.newInstance(memory).show(getFragmentManager(), MEMORY_DIALOG_TAG);
 
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(latLng));
