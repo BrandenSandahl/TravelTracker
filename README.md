@@ -6,3 +6,5 @@ Tutorial through BitFountain to work on google maps and DB integration.
 
 * Google Maps
 * Alert Dialogs
+* DiaglogFragments (with interface)
+*
