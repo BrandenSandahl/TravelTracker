@@ -6,6 +6,9 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Created by branden on 7/27/16.
@@ -16,6 +19,8 @@ public class MemoryDialogFragment extends DialogFragment {
 
     private Memory mMemory;
     private Listener mListener;
+    private View mView;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,16 +34,24 @@ public class MemoryDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        mView = getActivity().getLayoutInflater().inflate(R.layout.memory_dialog_fragment, null);
+        TextView cityView = (TextView) mView.findViewById(R.id.city);
+        cityView.setText(mMemory.city);
+        TextView countryView = (TextView) mView.findViewById(R.id.country);
+        countryView.setText(mMemory.country);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Memory")
-                .setMessage(mMemory.city + ", " + mMemory.country)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setView(mView)
+                .setTitle(getString(R.string.memory_dialog_title))
+                .setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        EditText notesView = (EditText) mView.findViewById(R.id.notes);
+                        mMemory.notes = notesView.getText().toString();
                         mListener.OnSaveClicked(mMemory);
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mListener.OnCancelClicked(mMemory);

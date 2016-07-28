@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         memory.country = bestMatch.getAddressLine(maxLines);
         memory.latitude = latLng.latitude;
         memory.longitute = latLng.longitude;
-        memory.notes = "My Notes...";
 
         MemoryDialogFragment.newInstance(memory).show(getFragmentManager(), MEMORY_DIALOG_TAG);
 
