@@ -8,3 +8,4 @@ Tutorial through BitFountain to work on google maps and DB integration.
 * Alert Dialogs
 * DiaglogFragments (with interface)
 * Create and inflate custom views for AlertDialog
+* SQLLite integration
