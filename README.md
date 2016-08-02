@@ -9,3 +9,9 @@ Tutorial through BitFountain to work on google maps and DB integration.
 * DiaglogFragments (with interface)
 * Create and inflate custom views for AlertDialog
 * SQLLite integration
+* DBHelper as a Singleton
+* DAO helper object
+* SQL table construction
+* SQL write to table
+* SQL read from table
+
