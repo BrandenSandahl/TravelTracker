@@ -9,18 +9,31 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DBHelper extends SQLiteOpenHelper {
 
-
     private static final String DATABASE_NAME = "traveltracker.db";
-    private static final String MEMORIES_TABLE = "memories";
-    private static final String COLUMN_ID = "_id";
-    private static final String COLUMN_LATITUDE = "latitude";
-    private static final String COLUMN_LONGITUDE = "longitude";
-    private static final String COLUMN_CITY = "city";
-    private static final String COLUMN_COUNTRY = "country";
-    private static final String COLUMN_NOTES = "notes";
+    public static final String MEMORIES_TABLE = "memories";
     private static final int DATABASE_VERSION = 1;
 
-    public DBHelper(Context context) {
+    private static DBHelper singleton = null;
+
+
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_LATITUDE = "latitude";
+    public static final String COLUMN_LONGITUDE = "longitude";
+    public static final String COLUMN_CITY = "city";
+    public static final String COLUMN_COUNTRY = "country";
+    public static final String COLUMN_NOTES = "notes";
+
+
+
+    public static DBHelper getInstance(Context context) {
+        if (singleton == null) {
+            singleton = new DBHelper(context.getApplicationContext());
+        }
+        return  singleton;
+
+    }
+
+    private DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -39,6 +52,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        //for test purposes only, this will kill all of your data
+        db.execSQL("DROP TABLE IF EXISTS " + MEMORIES_TABLE);
+        onCreate(db);
     }
 }
