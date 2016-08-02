@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDataSource = new MemoriesDataSource(this);
+
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -87,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         mMap.setOnMapClickListener(this);
         mMap.setInfoWindowAdapter(new MarkerAdapter(getLayoutInflater(), mMemories));
+
+        List<Memory> memories = mDataSource.getAllMemories();
     }
 
     @Override
@@ -110,8 +115,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         memory.longitute = latLng.longitude;
 
         MemoryDialogFragment.newInstance(memory).show(getFragmentManager(), MEMORY_DIALOG_TAG);
-
-        mDataSource = new MemoriesDataSource(this);
 
 
     }
