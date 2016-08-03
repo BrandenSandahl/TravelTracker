@@ -14,4 +14,5 @@ Tutorial through BitFountain to work on google maps and DB integration.
 * SQL table construction
 * SQL write to table
 * SQL read from table
+* Draggable marker that updates location
 
