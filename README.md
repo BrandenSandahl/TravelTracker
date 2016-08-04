@@ -18,3 +18,4 @@ Tutorial through BitFountain to work on google maps and DB integration.
 * Update a record
 * Delete a method
 * AsyncTask integration
+* AsyncTaskLoader integration
