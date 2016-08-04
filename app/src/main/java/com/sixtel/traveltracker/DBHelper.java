@@ -25,7 +25,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
-    public static DBHelper getInstance(Context context) {
+    //synchronized forces getInstance to be called by only one thing at a time
+    public synchronized static DBHelper getInstance(Context context) {
         if (singleton == null) {
             singleton = new DBHelper(context.getApplicationContext());
         }

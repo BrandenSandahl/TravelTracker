@@ -49,9 +49,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDataSource = new MemoriesDataSource(this);
-
-
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -61,9 +58,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LOCATION_REQUEST_CODE);
         }
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mDataSource = new MemoriesDataSource(this);
+        getLoaderManager().initLoader(0, null, this);
 
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mMap = mapFragment.getMap();
+        onMapReady(mMap);
 
     }
 
@@ -93,15 +94,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
         mMap.setMyLocationEnabled(true);
         mMap.setOnMapClickListener(this);
         mMap.setInfoWindowAdapter(new MarkerAdapter(getLayoutInflater(), mMemories));
         mMap.setOnMarkerDragListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
-        getLoaderManager().initLoader(0, null, this);
-
+        //Regular asyncTask example
 //        new AsyncTask<Void, Void, List<Memory>>() {
 //
 //            //this happens in background

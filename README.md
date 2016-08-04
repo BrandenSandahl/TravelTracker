@@ -19,4 +19,4 @@ Tutorial through BitFountain to work on google maps and DB integration.
 * Delete a method
 * AsyncTask integration
 * AsyncTaskLoader integration
-* LoaderCallBacks integration to handle AsyncTaskLoader
+* LoaderCallBack integration to handle AsyncTaskLoader
