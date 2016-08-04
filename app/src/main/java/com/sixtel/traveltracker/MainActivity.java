@@ -1,8 +1,11 @@
 package com.sixtel.traveltracker;
 
 import android.Manifest;
+import android.app.LoaderManager;
 import android.content.DialogInterface;
+import android.content.Loader;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -31,7 +34,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener, MemoryDialogFragment.Listener, GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int LOCATION_REQUEST_CODE = 200;
     private static final String MEMORY_DIALOG_TAG = "MemoryDialog";
@@ -97,20 +100,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerDragListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
-        new AsyncTask<Void, Void, List<Memory>>() {
+        getLoaderManager().initLoader(0, null, this);
 
-            //this happens in background
-            @Override
-            protected List<Memory> doInBackground(Void... params) {
-                return mDataSource.getAllMemories();
-            }
-
-            //this returns to main thread with results from background
-            @Override
-            protected void onPostExecute(List<Memory> memories) {
-                onFetchedMemories(memories);
-            }
-        }.execute();
+//        new AsyncTask<Void, Void, List<Memory>>() {
+//
+//            //this happens in background
+//            @Override
+//            protected List<Memory> doInBackground(Void... params) {
+//                return mDataSource.getAllMemories();
+//            }
+//
+//            //this returns to main thread with results from background
+//            @Override
+//            protected void onPostExecute(List<Memory> memories) {
+//                onFetchedMemories(memories);
+//            }
+//        }.execute();
 
     }
 
@@ -165,6 +170,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+
+
+    /* loader call back stuff */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new MemoriesLoader(this, mDataSource);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        onFetchedMemories(mDataSource.cursorToMemories(data));
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+
 
     private void addMarker(Memory memory) {
         Marker marker = mMap.addMarker(new MarkerOptions()
@@ -237,4 +261,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .show();
 
     }
+
 }
