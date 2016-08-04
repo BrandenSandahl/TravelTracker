@@ -20,3 +20,4 @@ Tutorial through BitFountain to work on google maps and DB integration.
 * AsyncTask integration
 * AsyncTaskLoader integration
 * LoaderCallBack integration to handle AsyncTaskLoader
+* Synchronized singleton
