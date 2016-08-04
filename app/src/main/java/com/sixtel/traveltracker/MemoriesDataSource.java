@@ -35,7 +35,7 @@ public class MemoriesDataSource {
         values.put(DBHelper.COLUMN_LATITUDE, memory.latitude);
         values.put(DBHelper.COLUMN_LONGITUDE, memory.longitute);
 
-        mDBHelper.getWritableDatabase().insert(DBHelper.MEMORIES_TABLE, null, values);
+        memory.id = mDBHelper.getWritableDatabase().insert(DBHelper.MEMORIES_TABLE, null, values);
     }
 
     public List<Memory> getAllMemories() {
@@ -53,8 +53,37 @@ public class MemoriesDataSource {
     }
 
 
+    public void updateMemory(Memory memory) {
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.COLUMN_NOTES, memory.notes);
+        values.put(DBHelper.COLUMN_CITY, memory.city);
+        values.put(DBHelper.COLUMN_COUNTRY, memory.country);
+        values.put(DBHelper.COLUMN_LATITUDE, memory.latitude);
+        values.put(DBHelper.COLUMN_LONGITUDE, memory.longitute);
+
+        String[] whereArgs = {String.valueOf(memory.id)};
+
+        mDBHelper.getWritableDatabase().update(
+                mDBHelper.MEMORIES_TABLE,
+                values,
+                mDBHelper.COLUMN_ID + "=?",
+                whereArgs
+        );
+    }
+
+    public void deleteMemory(Memory memory) {
+        String[] whereArgs = {String.valueOf(memory.id)};
+
+        mDBHelper.getWritableDatabase().delete(
+                mDBHelper.MEMORIES_TABLE,
+                mDBHelper.COLUMN_ID + "=?",
+                whereArgs
+        );
+    }
+
     private Memory cursorToMemory(Cursor cursor) {
         Memory memory = new Memory();
+        memory.id = cursor.getLong(0);
         memory.city = cursor.getString(1);
         memory.country = cursor.getString(2);
         memory.latitude = cursor.getDouble(3);

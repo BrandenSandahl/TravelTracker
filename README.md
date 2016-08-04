@@ -15,4 +15,6 @@ Tutorial through BitFountain to work on google maps and DB integration.
 * SQL write to table
 * SQL read from table
 * Draggable marker that updates location
-
+* Update a record
+* Delete a method
+* AsyncTask integration

@@ -6,10 +6,13 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -25,9 +28,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMapClickListener, MemoryDialogFragment.Listener, GoogleMap.OnMarkerDragListener {
+        GoogleMap.OnMapClickListener, MemoryDialogFragment.Listener, GoogleMap.OnMarkerDragListener,
+        GoogleMap.OnInfoWindowClickListener {
 
     private static final int LOCATION_REQUEST_CODE = 200;
     private static final String MEMORY_DIALOG_TAG = "MemoryDialog";
@@ -91,13 +96,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMapClickListener(this);
         mMap.setInfoWindowAdapter(new MarkerAdapter(getLayoutInflater(), mMemories));
         mMap.setOnMarkerDragListener(this);
+        mMap.setOnInfoWindowClickListener(this);
 
-        List<Memory> memories = mDataSource.getAllMemories();
+        new AsyncTask<Void, Void, List<Memory>>() {
 
+            //this happens in background
+            @Override
+            protected List<Memory> doInBackground(Void... params) {
+                return mDataSource.getAllMemories();
+            }
+
+            //this returns to main thread with results from background
+            @Override
+            protected void onPostExecute(List<Memory> memories) {
+                onFetchedMemories(memories);
+            }
+        }.execute();
+
+    }
+
+    private void onFetchedMemories(List<Memory> memories) {
         for (Memory m : memories) {
             addMarker(m);
         }
-
     }
 
     @Override
@@ -175,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMarkerDragEnd(Marker marker) {
         Memory memory = mMemories.get(marker.getId());
         updateMemoryPosition(memory, marker.getPosition());
+        mDataSource.updateMemory(memory);
 
     }
 
@@ -198,4 +220,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
+    @Override
+    public void onInfoWindowClick(final Marker marker) {
+        final Memory memory = mMemories.get(marker.getId());
+        String[] actions = {"Edit", "Delete"};
+        new AlertDialog.Builder(this)
+                .setTitle(memory.city.toString()+ ", "+ memory.country.toString())
+                .setItems(actions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 1) { //refers to the index of delete in the actions array
+                            marker.remove();
+                            mDataSource.deleteMemory(memory);
+                        }
+                    }
+                })
+                .show();
+
+    }
 }
